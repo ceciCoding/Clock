@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>JavaScript Clock</title>
+</head>
+<body>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hours-hand"></div>
+      <div class="hand minutes-hand"></div>
+      <div class="hand seconds-hand"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <style>
+
+    html {
+      background: #018DED url(http://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      font-size: 10px;
+      text-align: center;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2 rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+      
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px);
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      /*esto es para que gire desde el extremo que está en el centro
+      del círculo. Por defecto está al 50%, con lo cual gira sobre su
+      centro */
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+
+    
+    .dot {
+      position: absolute;
+      border: 6px solid black;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+
+  <script>
+    //esto lo podemos traer dentro o fuera de la función
+    const secondsHand = document.querySelector('.seconds-hand');
+    const minutesHand = document.querySelector('.minutes-hand');
+    const hoursHand = document.querySelector('.hours-hand');
+    console.log(secondsHand);
+  
+    function setDate(){
+      const now = new Date();
+
+      const seconds = now.getSeconds();
+      console.log(seconds);
+      //now we have to turn this seconds into degrees. We add 90
+      //because we took them at .hand css (0 starts at west/left by default)
+      const secondsDegrees = (360 / 60) * seconds + 90;
+      secondsHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+      const minutes = now.getMinutes();
+      console.log(minutes);
+      const minutesDegrees = (360 / 60) * minutes + 90;
+      minutesHand.style.transform = `rotate(${minutesDegrees}deg)`;
+
+      const hours = now.getHours();
+      console.log(hours);
+      const hoursDegrees = (360 / 12) * hours + 90;
+      hoursHand.style.transform = `rotate(${hoursDegrees}deg)`
+
+      removeTransition(secondsHand, secondsDegrees);
+      removeTransition(minutesHand, minutesDegrees);
+      removeTransition(hoursHand, hoursDegrees);
+    }
+
+    //this is to fix the animation problem when hands reach 12
+    function removeTransition(element, degrees){
+      if(degrees === 90){
+        element.style.transition = 'all 0.0s';
+      }
+    }
+
+    setInterval(setDate, 1000);
+
+    
+  </script>
+
+</body>
+</html>
